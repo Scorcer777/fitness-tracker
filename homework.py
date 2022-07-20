@@ -120,13 +120,10 @@ class SportsWalking(Training):
         speed: float = self.get_mean_speed()
         MIN_IN_HOUR: int = 60
         duration_minutes: float = self.duration * MIN_IN_HOUR
-        energy_spent: float = ((coeff_calorie_1 *
-                                self.weight
-                                + (speed ** coeff_calorie_3
-                                   // self.height) *
-                                coeff_calorie_2
-                                * self.weight) *
-                               duration_minutes)
+        energy_spent: float = ((
+            coeff_calorie_1 * self.weight
+            + (speed ** coeff_calorie_3 // self.height)
+            * coeff_calorie_2 * self.weight) * duration_minutes)
         return energy_spent
 
 
@@ -145,7 +142,8 @@ class Swimming(Training):
 
     def get_mean_speed(self) -> float:
         M_IN_KM: int = 1000
-        speed_km_h: float = self.length_pool * self.count_pool / M_IN_KM / self.duration
+        speed_km_h: float = (
+            self.length_pool * self.count_pool / M_IN_KM / self.duration)
         return speed_km_h
 
     def get_spent_calories(self) -> float:
