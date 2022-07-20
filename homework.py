@@ -10,18 +10,18 @@ class InfoMessage:
     energy_spent: float
 
     def __init__(self, training_type: str, duration: float,
-                 distance_km: float, speed_km_h: float,
+                 distance: float, speed_km_h: float,
                  energy_spent: float) -> None:
         self.training_type = training_type
         self.duration = duration
-        self.distance_km = distance_km
+        self.distance = distance
         self.speed_km_h = speed_km_h
         self.energy_spent = energy_spent
 
     def get_message(self) -> str:
         message: str = (f'Тип тренировки: {self.training_type};'
                         f'Длительность: {self.duration};'
-                        f'Дистанция: {self.distance_km};'
+                        f'Дистанция: {self.distance};'
                         f'Средняя скорость: {self.speed_km_h};'
                         f'Потрачено калорий: {self.energy_spent}'
                         )
@@ -53,8 +53,8 @@ class Training:
         """Получить дистанцию в км."""
         LEN_STEP: float = 0.65
         M_IN_KM: float = 1000
-        distance_km: float = self.action * LEN_STEP / M_IN_KM
-        return distance_km
+        distance: float = self.action * LEN_STEP / M_IN_KM
+        return distance
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
@@ -69,13 +69,13 @@ class Training:
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
         duration = self.duration
-        distance_km = self.get_distance()
+        distance = self.get_distance()
         speed_km_h = self.get_mean_speed()
         energy_spent = self.get_spent_calories()
 
         return InfoMessage(self.__class__.__name__,
                            duration,
-                           distance_km,
+                           distance,
                            speed_km_h,
                            energy_spent
                            )
