@@ -95,9 +95,10 @@ class Running(Training):
         speed_km_h: float = self.get_mean_speed()
         MIN_IN_HOUR: int = 60
         duration_minutes: float = self.duration * MIN_IN_HOUR
-        calories: float = (((coeff_calorie_1 * speed_km_h) - coeff_calorie_2)
-                               * self.weight / M_IN_KM
-                               * duration_minutes)
+        calories: float = (((
+            coeff_calorie_1 * speed_km_h) - coeff_calorie_2)
+            * self.weight / M_IN_KM
+            * duration_minutes)
         return calories
 
 
