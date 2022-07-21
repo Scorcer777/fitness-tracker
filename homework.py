@@ -1,27 +1,26 @@
 from typing import Union, Sequence
+from dataclasses import dataclass, asdict
 
 
+@dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
+    training_type: str
+    duration: float
+    distance: float
+    speed: float
+    calories: float
 
-    def __init__(self, training_type: str, duration: float,
-                 distance: float, speed: float,
-                 calories: float) -> None:
-        self.training_type = training_type
-        self.duration = duration
-        self.distance = distance
-        self.speed = speed
-        self.calories = calories
+    message: str = ('Тип тренировки: {training_type}; '
+                    'Длительность: {duration:.3f} ч.; '
+                    'Дистанция: {distance:.3f} км; '
+                    'Ср. скорость: {speed:.3f} км/ч; '
+                    'Потрачено ккал: {calories:.3f}.'
+                    )
 
     def get_message(self) -> str:
-        message: str = (f'Тип тренировки: {self.training_type};'
-                        f'Длительность: {round(self.duration, 3)};'
-                        f'Дистанция: {round(self.distance, 3)};'
-                        f'Средняя скорость: {round(self.speed, 3)};'
-                        f'Потрачено калорий: {round(self.calories, 3)}'
-                        )
-
-        return message
+        """Строка сообщения"""
+        return self.message.format(**asdict(self))
 
     def print_message(self) -> None:
         print(self.get_message())
@@ -29,8 +28,8 @@ class InfoMessage:
 
 class Training:
     """Базовый класс тренировки."""
-    LEN_STEP: float
-    M_IN_KM: int
+    LEN_STEP: float = 0.65
+    M_IN_KM: int = 1000
 
     def __init__(self,
                  action: int,
@@ -76,7 +75,7 @@ class Training:
 class Running(Training):
     COEFF_CALORIE_1: int
     COEFF_CALORIE_2: int
-    M_IN_KM: int
+    M_IN_KM: int = 1000
     MIN_IN_HOUR: int
     """Тренировка: бег."""
 
@@ -121,7 +120,8 @@ class SportsWalking(Training):
 
 class Swimming(Training):
     """Тренировка: плавание."""
-    M_IN_KM: int
+    LEN_STEP: float = 1.38
+    M_IN_KM: int = 1000
     COEFF_CALORIE_1: float
     COEFF_CALORIE_2: int
 
@@ -129,6 +129,13 @@ class Swimming(Training):
         super().__init__(action, duration, weight)
         self.length_pool = length_pool
         self.count_pool = count_pool
+
+    def get_distance(self) -> float:
+        """Получить дистанцию в км."""
+        LEN_STEP: float = 1.38
+        M_IN_KM: int = 1000
+        distance: float = self.action * LEN_STEP / M_IN_KM
+        return distance
 
     def get_mean_speed(self) -> float:
         M_IN_KM: int = 1000
