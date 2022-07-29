@@ -1,4 +1,4 @@
-from typing import Union, Sequence
+from typing import Union, Sequence, Dict, Type
 from dataclasses import dataclass, asdict
 
 
@@ -42,9 +42,7 @@ class Training:
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
-        LEN_STEP: float = 0.65
-        M_IN_KM: int = 1000
-        distance: float = self.action * LEN_STEP / M_IN_KM
+        distance: float = self.action * self.LEN_STEP / self.M_IN_KM
         return distance
 
     def get_mean_speed(self) -> float:
@@ -59,62 +57,50 @@ class Training:
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-        duration = self.duration
-        distance = self.get_distance()
-        speed = self.get_mean_speed()
-        calories = self.get_spent_calories()
-
         return InfoMessage(self.__class__.__name__,
-                           duration,
-                           distance,
-                           speed,
-                           calories
+                           self.duration,
+                           self.get_distance(),
+                           self.get_mean_speed(),
+                           self.get_spent_calories()
                            )
 
 
 class Running(Training):
-    COEFF_CALORIE_1: int
-    COEFF_CALORIE_2: int
+    CALORIES_MEAN_SPEED_MULTIPLIER: int = 18
+    CALORIES_MEAN_SPEED_SHIFT: int = 20
     M_IN_KM: int = 1000
-    MIN_IN_HOUR: int
+    MIN_IN_HOUR: int = 60
     """Тренировка: бег."""
 
     def get_spent_calories(self) -> float:
-        COEFF_CALORIE_1: int = 18
-        COEFF_CALORIE_2: int = 20
-        M_IN_KM: int = 1000
         speed_km_h: float = self.get_mean_speed()
-        MIN_IN_HOUR: int = 60
-        duration_minutes: float = self.duration * MIN_IN_HOUR
+        duration_minutes: float = self.duration * self.MIN_IN_HOUR
         calories: float = (((
-            COEFF_CALORIE_1 * speed_km_h) - COEFF_CALORIE_2)
-            * self.weight / M_IN_KM
+            self.CALORIES_MEAN_SPEED_MULTIPLIER * speed_km_h)
+            - self.CALORIES_MEAN_SPEED_SHIFT)
+            * self.weight / self.M_IN_KM
             * duration_minutes)
         return calories
 
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-    COEFF_CALORIE_1: float
-    COEFF_CALORIE_2: float
-    COEFF_CALORIE_3: int
-    MIN_IN_HOUR: int
+    COEFF_CALORIE_1: float = 0.035
+    COEFF_CALORIE_2: float = 0.029
+    COEFF_CALORIE_3: int = 2
+    MIN_IN_HOUR: int = 60
 
     def __init__(self, action, duration, weight, height: float):
         super().__init__(action, duration, weight)
         self.height = height
 
     def get_spent_calories(self) -> float:
-        COEFF_CALORIE_1: float = 0.035
-        COEFF_CALORIE_2: float = 0.029
-        COEFF_CALORIE_3: int = 2
         speed_km_h: float = self.get_mean_speed()
-        MIN_IN_HOUR: int = 60
-        duration_minutes: float = self.duration * MIN_IN_HOUR
         calories: float = ((
-            COEFF_CALORIE_1 * self.weight
-            + (speed_km_h ** COEFF_CALORIE_3 // self.height)
-            * COEFF_CALORIE_2 * self.weight) * duration_minutes)
+            self.COEFF_CALORIE_1 * self.weight
+            + (speed_km_h ** self.COEFF_CALORIE_3 // self.height)
+            * self.COEFF_CALORIE_2 * self.weight)
+            * self.duration * self.MIN_IN_HOUR)
         return calories
 
 
@@ -132,9 +118,7 @@ class Swimming(Training):
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
-        LEN_STEP: float = 1.38
-        M_IN_KM: int = 1000
-        distance: float = self.action * LEN_STEP / M_IN_KM
+        distance: float = self.action * self.LEN_STEP / self.M_IN_KM
         return distance
 
     def get_mean_speed(self) -> float:
@@ -155,10 +139,11 @@ class Swimming(Training):
 def read_package(workout_type: str, data: Sequence[int]) -> Union[
         Running, SportsWalking, Swimming]:
     """Прочитать данные полученные от датчиков."""
-    training_types = {'SWM': Swimming,
-                      'RUN': Running,
-                      'WLK': SportsWalking
-                      }
+    training_types: Dict[str, Type[Training]] = {'SWM': Swimming,
+                                                 'RUN': Running,
+                                                 'WLK': SportsWalking}
+    if workout_type not in training_types:
+        raise KeyError('Тип тренировки должен быть SWM, RUN или WLK')
     return training_types[workout_type](*data)
 
 
