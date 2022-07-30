@@ -1,4 +1,4 @@
-from typing import Union, Sequence, Dict, Type
+from typing import Union, Sequence, Dict, Type, List
 from dataclasses import dataclass, asdict
 
 
@@ -133,8 +133,8 @@ def read_package(workout_type: str, data: Sequence[int]) -> Union[
                                                  'RUN': Running,
                                                  'WLK': SportsWalking}
     if workout_type not in training_types:
-        a = training_types.keys()
-        b = ', '.join(a)
+        a: List[str] = training_types.keys()
+        b: str = ', '.join(a)
         raise KeyError(f'Тип тренировки должен быть {b}')
     return training_types[workout_type](*data)
 
