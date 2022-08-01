@@ -68,7 +68,7 @@ class Training:
 
 class Running(Training):
     CALORIES_MEAN_SPEED_MULTIPLIER: int = 18
-    CALORIES_MEAN_SPEED_SHIFT: int = 20   
+    CALORIES_MEAN_SPEED_SHIFT: int = 20
     """Тренировка: бег."""
 
     def get_spent_calories(self) -> float:
