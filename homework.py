@@ -74,7 +74,7 @@ class Running(Training):
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-    SEC_IN_HOUR: int = 3600
+    KMH_TO_MPS: float = 0.278
     CM_IN_METER: int = 100
     COEFF_CAL_WEIGHT1: float = 0.035
     COEFF_CAL_WEIGHT2: float = 0.029
@@ -91,7 +91,7 @@ class SportsWalking(Training):
     def get_spent_calories(self) -> float:
         """Количество калорий во время ходьбы."""
         return ((self.COEFF_CAL_WEIGHT1 * self.weight
-                + ((self.get_mean_speed() * self.M_IN_KM / self.SEC_IN_HOUR)
+                + ((self.get_mean_speed() * self.KMH_TO_MPS)
                  ** 2 / self.height / self.CM_IN_METER)
                  * self.COEFF_CAL_WEIGHT2 * self.weight)
                 * (self.duration * self.MIN_IN_H))
