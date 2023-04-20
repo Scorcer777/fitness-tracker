@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Type
+from typing import Type, Union
 
 
 class InfoMessage:
@@ -126,7 +126,7 @@ class Swimming(Training):
                 * self.COEFF_CAL_SWM2 * self.weight * self.duration)
 
 
-def read_package(workout_type: str, data: list) -> Training:
+def read_package(workout_type: str, data: list) -> Union(Training, bool):
     """Прочитать данные полученные от датчиков."""
     training_data: dict[str, Type[Swimming | Running | SportsWalking]] = {
         'SWM': Swimming,
@@ -135,15 +135,18 @@ def read_package(workout_type: str, data: list) -> Training:
     }
 
     if workout_type not in training_data:
-        print('Неправильный вид тренировки. Необходимо выбрать из '
-              'SWM(Swimming), RUN(Running) или WLK(Sportswalkking).')
+        return False
     return training_data[workout_type](*data)
 
 
-def main(training: Training) -> None:
+def main(training: Union(Training, bool)) -> None:
     """Главная функция."""
-    info: InfoMessage = training.show_training_info()
-    print(info.get_message())
+    if training is False:
+        print('Неправильный вид тренировки. Необходимо выбрать из '
+              'SWM(Swimming), RUN(Running) или WLK(Sportswalkking).')
+    else:
+        info: InfoMessage = training.show_training_info()
+        print(info.get_message())
 
 
 if __name__ == '__main__':
