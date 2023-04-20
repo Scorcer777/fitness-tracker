@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Type
 
 
 class InfoMessage:
@@ -127,14 +128,16 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_data: dict = {
+    training_data: dict[str, Type[Swimming | Running | SportsWalking]] = {
         'SWM': Swimming,
         'RUN': Running,
         'WLK': SportsWalking
     }
 
-    if workout_type in training_data:
-        return training_data[workout_type](*data)
+    if workout_type not in training_data:
+        print('Неправильный вид тренировки. Необходимо выбрать из '
+              'SWM(Swimming), RUN(Running) или WLK(Sportswalkking).')
+    return training_data[workout_type](*data)
 
 
 def main(training: Training) -> None:
