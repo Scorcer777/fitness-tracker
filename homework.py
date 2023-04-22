@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Type, Union
+from typing import Type
 
 
 class InfoMessage:
@@ -126,7 +126,7 @@ class Swimming(Training):
                 * self.COEFF_CAL_SWM2 * self.weight * self.duration)
 
 
-def read_package(workout_type: str, data: list) -> Union(Training, bool):
+def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
     training_data: dict[str, Type[Training]] = {
         'SWM': Swimming,
