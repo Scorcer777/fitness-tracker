@@ -128,25 +128,22 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list) -> Union(Training, bool):
     """Прочитать данные полученные от датчиков."""
-    training_data: dict[str, Type[Swimming | Running | SportsWalking]] = {
+    training_data: dict[str, Type[Training]] = {
         'SWM': Swimming,
         'RUN': Running,
         'WLK': SportsWalking
     }
 
     if workout_type not in training_data:
-        return False
+        raise Exception('Неправильный вид тренировки. Необходимо выбрать из '
+                        'SWM(Swimming), RUN(Running) или WLK(Sportswalkking).')
     return training_data[workout_type](*data)
 
 
 def main(training: Union(Training, bool)) -> None:
     """Главная функция."""
-    if training is False:
-        print('Неправильный вид тренировки. Необходимо выбрать из '
-              'SWM(Swimming), RUN(Running) или WLK(Sportswalkking).')
-    else:
-        info: InfoMessage = training.show_training_info()
-        print(info.get_message())
+    info: InfoMessage = training.show_training_info()
+    print(info.get_message())
 
 
 if __name__ == '__main__':
