@@ -140,7 +140,7 @@ def read_package(workout_type: str, data: list) -> Training:
     return training_data[workout_type](*data)
 
 
-def main(training: Union(Training, bool)) -> None:
+def main(training: Training) -> None:
     """Главная функция."""
     info: InfoMessage = training.show_training_info()
     print(info.get_message())
@@ -148,7 +148,7 @@ def main(training: Union(Training, bool)) -> None:
 
 if __name__ == '__main__':
     packages: list[tuple[str, list[int]]] = [
-        ('SWM', [720, 1, 80, 25, 40]),
+        ('Ssd', [720, 1, 80, 25, 40]),
         ('RUN', [15000, 1, 75]),
         ('WLK', [9000, 1, 75, 180]),
     ]
