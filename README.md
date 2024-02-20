@@ -9,6 +9,6 @@ git clone git@github.com:Scorcer777/fitness-tracker.git
 ```
 2. Для демонстрации работы запустить файл в терминале Git Bash.
 ```bash
-python homework.py
+python caloriescounter.py
 ```
 
